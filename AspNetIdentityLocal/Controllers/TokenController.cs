@@ -40,10 +40,15 @@ namespace AspNetIdentityLocal.Controllers
                 return Unauthorized("Contraseña inválida");
             }
 
-            var claims = new[]{
+            var claims = new List<Claim>(){
                 new Claim(JwtRegisteredClaimNames.Jti, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName)
             };
+
+            var roles = await _userManager.GetRolesAsync(user);
+            foreach(string role in roles){
+                claims.Add(new Claim("role", role));
+            }
 
             DateTime expiration = DateTime.Now.AddMinutes(60);
 
