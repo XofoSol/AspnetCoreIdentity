@@ -42,12 +42,13 @@ namespace AspNetIdentityLocal.Controllers
 
             var claims = new List<Claim>(){
                 new Claim(JwtRegisteredClaimNames.Jti, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName)
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
             };
 
             var roles = await _userManager.GetRolesAsync(user);
             foreach(string role in roles){
-                claims.Add(new Claim("role", role));
+                claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
             DateTime expiration = DateTime.Now.AddMinutes(60);
